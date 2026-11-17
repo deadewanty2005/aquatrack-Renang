@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AquaTrack — Penilaian Renang</title>
+<style>
+:root{--navy:#102b46;--blue:#087eaa;--cyan:#dff6fb;--bg:#f3f8fb;--ink:#173047;--muted:#647b8d;--line:#dce8ef;--white:#fff;--green:#16845b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font:15px/1.5 system-ui,-apple-system,Segoe UI,Arial;color:var(--ink)}
+header{background:linear-gradient(120deg,#0d3554,#087eaa);color:white;padding:28px 20px}
+.wrap{max-width:1050px;margin:auto;padding:0 18px}.brand{font-size:13px;letter-spacing:.14em;font-weight:800;opacity:.85}.hero{display:flex;gap:22px;align-items:center;justify-content:space-between;flex-wrap:wrap}.hero h1{font-size:clamp(26px,4vw,38px);line-height:1.1;margin:8px 0}.hero p{margin:0;color:#d8f4fc;max-width:620px}
+main{padding:24px 0 50px}.tabs{display:flex;gap:8px;margin:0 0 18px;flex-wrap:wrap}.tabs button,.btn{border:0;border-radius:10px;padding:11px 16px;font-weight:700;cursor:pointer}.tabs button{background:#e4eff4;color:var(--navy)}.tabs button.active,.btn.primary{background:var(--blue);color:white}.btn{background:#e9f2f6;color:var(--navy)}.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}.card{background:white;border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 4px 18px #17304708}.card h2{font-size:19px;margin:0 0 14px}.card h3{font-size:15px;margin:0 0 8px}.field{margin:0 0 13px}.field label{display:block;font-weight:700;font-size:13px;margin-bottom:5px}.field input,.field select,.field textarea{width:100%;padding:11px 12px;border:1px solid #cbdbe4;border-radius:9px;font:inherit;background:#fff;color:var(--ink)}.field input:focus,.field select:focus{outline:3px solid #b9e8f5;border-color:var(--blue)}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.hint{color:var(--muted);font-size:12px}.location{padding:12px;background:#f0f8fb;border:1px dashed #a9cfdd;border-radius:10px;margin:10px 0 14px}.location strong{display:block}.scorebox{background:var(--navy);color:white;border-radius:14px;padding:18px;margin-top:14px}.score{font-size:42px;font-weight:850;line-height:1.1}.scorebox small{color:#cbeaf3}.meter{height:9px;background:#ffffff33;border-radius:20px;margin:12px 0;overflow:hidden}.meter span{display:block;height:100%;background:#58d5c4;width:0%}.pill{display:inline-block;padding:4px 9px;border-radius:20px;background:#e2f5ef;color:#126b4b;font-size:12px;font-weight:800}.video{aspect-ratio:16/9;width:100%;border:0;border-radius:12px;background:#e6f2f6}.video-list{display:grid;gap:14px}.video-list a{color:var(--blue);font-weight:700}.hidden{display:none!important}.notice{font-size:12px;color:var(--muted);margin-top:10px}.result{padding:12px;border-radius:10px;background:#f2f8fa;margin-top:12px}.history{display:grid;gap:8px}.history-item{border:1px solid var(--line);padding:11px;border-radius:10px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.footer{font-size:12px;color:var(--muted);margin-top:18px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.row{grid-template-columns:1fr}.hero{align-items:flex-start}}
+</style>
+</head>
+<body>
+<header><div class="wrap hero"><div><div class="brand">AQUATRACK • SWIM PERFORMANCE</div><h1>Catat latihan. Ukur progres.</h1><p>Platform sederhana untuk atlet renang dan pelatih: penilaian otomatis berbasis hasil latihan, video pembelajaran, dan lokasi saat pengisian.</p></div><div aria-hidden="true" style="font-size:64px">🏊</div></div></header>
+<main class="wrap">
+<div class="tabs" role="tablist"><button class="active" id="athleteTab" type="button">Atlet</button><button id="coachTab" type="button">Pelatih</button></div>
+<div id="athleteView">
+<div class="grid">
+<section class="card">
+<h2>Form penilaian latihan</h2>
+<form id="swimForm">
+<div class="field"><label for="athlete">Nama atlet</label><input id="athlete" required placeholder="Masukkan nama atlet"></div>
+<div class="row">
+<div class="field"><label for="coach">Nama pelatih</label><input id="coach" placeholder="Nama pelatih"></div>
+<div class="field"><label for="date">Tanggal latihan</label><input id="date" type="date" required></div>
+</div>
+<div class="row">
+<div class="field"><label for="style">Gaya renang</label><select id="style"><option value="bebas">Gaya bebas</option><option value="dada">Gaya dada</option><option value="punggung">Gaya punggung</option><option value="kupu">Gaya kupu-kupu</option></select></div>
+<div class="field"><label for="distance">Jarak (meter)</label><select id="distance"><option>25</option><option selected>50</option><option>100</option><option>200</option><option>400</option></select></div>
+</div>
+<div class="row">
+<div class="field"><label for="time">Waktu tempuh (detik)</label><input id="time" type="number" min="1" step="0.01" required placeholder="Contoh: 38.5"></div>
+<div class="field"><label for="technique">Nilai teknik dari checklist (0–100)</label><input id="technique" type="number" min="0" max="100" value="80" required></div>
+</div>
+<div class="field"><label for="notes">Catatan latihan (opsional)</label><textarea id="notes" rows="2" placeholder="Contoh: perbaiki posisi kepala saat mengambil napas"></textarea></div>
+<div class="location"><strong>📍 Lokasi saat pengisian</strong><span id="locStatus">Belum diambil. Tekan tombol untuk meminta lokasi perangkat.</span><div style="margin-top:9px"><button class="btn" id="locBtn" type="button">Ambil lokasi saya</button></div><div class="hint">Lokasi hanya diambil setelah izin browser diberikan. Koordinat disertakan pada catatan hasil di perangkat ini.</div></div>
+<button class="btn primary" type="submit">Hitung nilai & simpan hasil</button>
+<div class="notice">Penilaian otomatis menggunakan waktu, jarak, dan nilai teknik yang dimasukkan. Ini bukan analisis gerakan AI dari video; pelatih tetap perlu memvalidasi teknik.</div>
+</form>
+<div id="result" class="scorebox hidden" aria-live="polite"><small>SKOR LATIHAN</small><div class="score" id="score">0</div><div id="grade"></div><div class="meter"><span id="meter"></span></div><div id="breakdown"></div></div>
+</section>
+<aside class="card">
+<h2>Video pembelajaran renang</h2>
+<p class="hint">Video referensi teknik dasar. Pilih video untuk menonton di panel.</p>
+<div class="video-list">
+<div><h3>1. Teknik gaya bebas</h3><iframe class="video" src="https://www.youtube-nocookie.com/embed/5HLW2AI1Ink" title="Tutorial teknik gaya bebas" loading="lazy" allowfullscreen></iframe></div>
+<div><h3>2. Teknik gaya dada</h3><iframe class="video" src="https://www.youtube-nocookie.com/embed/ovv4o2k4QwM" title="Tutorial teknik gaya dada" loading="lazy" allowfullscreen></iframe></div>
+<div><h3>3. Teknik pernapasan renang</h3><iframe class="video" src="https://www.youtube-nocookie.com/embed/8n8w2p8WJ8Y" title="Tutorial pernapasan renang" loading="lazy" allowfullscreen></iframe></div>
+</div>
+</aside>
+</div>
+</div>
+<div id="coachView" class="hidden">
+<div class="grid">
+<section class="card"><h2>Panel pelatih</h2><p>Gunakan daftar hasil latihan yang tersimpan pada browser/perangkat ini untuk memantau atlet.</p><div class="field"><label for="coachFilter">Cari nama atlet</label><input id="coachFilter" placeholder="Ketik nama atlet..."></div><div class="history" id="history"><p class="hint">Belum ada hasil tersimpan.</p></div><button class="btn" id="exportBtn" type="button">Unduh laporan CSV</button></section>
+<aside class="card"><h2>Panduan penilaian</h2><p><b>Skor akhir = 60% performa waktu + 40% teknik.</b></p><p>Performa waktu dibandingkan dengan patokan latihan sederhana berdasarkan jarak dan gaya. Skor ini berguna untuk melihat progres pribadi, bukan standar seleksi resmi atau perbandingan universal antar-atlet.</p><p class="hint">Data tersimpan lokal di browser. Untuk penggunaan tim lintas perangkat, diperlukan server, akun pengguna, dan basis data online.</p></aside>
+</div>
+</div>
+<p class="footer">AquaTrack • Prototipe lokal. Lokasi membutuhkan HTTPS atau localhost dan izin lokasi. Jangan gunakan lokasi atlet tanpa persetujuan mereka.</p>
+</main>
+<script>
+(function(){
+const $=id=>document.getElementById(id);let currentLocation=null;let records=[];
+try{records=JSON.parse(localStorage.getItem('aquatrack_records')||'[]')}catch(e){records=[]}
+$('date').value=new Date().toISOString().slice(0,10);
+function switchView(coach){$('athleteView').classList.toggle('hidden',coach);$('coachView').classList.toggle('hidden',!coach);$('athleteTab').classList.toggle('active',!coach);$('coachTab').classList.toggle('active',coach);if(coach)renderHistory()}
+$('athleteTab').addEventListener('click',()=>switchView(false));$('coachTab').addEventListener('click',()=>switchView(true));
+$('locBtn').addEventListener('click',()=>{
+ const status=$('locStatus');if(!navigator.geolocation){status.textContent='Browser ini tidak mendukung geolokasi.';return}
+ status.textContent='Meminta izin lokasi...';
+ navigator.geolocation.getCurrentPosition(pos=>{currentLocation={latitude:pos.coords.latitude,longitude:pos.coords.longitude,accuracy:Math.round(pos.coords.accuracy)};status.textContent=`Lokasi didapat: ${currentLocation.latitude.toFixed(5)}, ${currentLocation.longitude.toFixed(5)} (akurasi ±${currentLocation.accuracy} m)`},err=>{currentLocation=null;status.textContent=err.code===1?'Izin lokasi ditolak. Anda tetap dapat mengisi tanpa lokasi.':'Lokasi tidak tersedia. Coba lagi atau isi tanpa lokasi.'},{enableHighAccuracy:true,timeout:12000,maximumAge:60000});
+});
+function baseline(style,distance){const base={bebas:0.72,dada:1.05,punggung:0.82,kupu:0.95}[style]||0.8;return distance*base}
+$('swimForm').addEventListener('submit',e=>{
+ e.preventDefault();const distance=Number($('distance').value),time=Number($('time').value),tech=Number($('technique').value);
+ if(!Number.isFinite(time)||time<=0||!Number.isFinite(tech)||tech<0||tech>100){alert('Periksa waktu dan nilai teknik.');return}
+ const target=baseline($('style').value,distance);const performance=Math.max(0,Math.min(100,(target/time)*100));const score=Math.round(performance*.6+tech*.4);
+ const grade=score>=90?'Sangat baik':score>=80?'Baik':score>=70?'Cukup':score>=60?'Perlu latihan':'Perlu evaluasi';
+ const rec={name:$('athlete').value.trim(),coach:$('coach').value.trim(),date:$('date').value,style:$('style').value,distance,time,tech,performance:Math.round(performance),score,grade,notes:$('notes').value,location:currentLocation};
+ records.unshift(rec);records=records.slice(0,300);try{localStorage.setItem('aquatrack_records',JSON.stringify(records))}catch(err){}
+ $('result').classList.remove('hidden');$('score').textContent=score+'/100';$('grade').textContent=grade;$('meter').style.width=score+'%';$('breakdown').innerHTML=`Performa waktu: ${Math.round(performance)}/100 • Teknik: ${tech}/100<br>Target pembanding prototipe: ${target.toFixed(1)} detik • Hasil: ${time.toFixed(2)} detik<br>Lokasi: ${currentLocation?'tercatat':'tidak disertakan'}`;
+ renderHistory();
+});
+function renderHistory(){const q=($('coachFilter').value||'').toLowerCase();const list=records.filter(r=>r.name.toLowerCase().includes(q));$('history').innerHTML=list.length?list.map(r=>`<div class="history-item"><div><b>${escapeHtml(r.name)}</b><br><span class="hint">${r.date} • ${r.distance} m ${r.style}</span><br><span class="hint">${r.location?'📍 Lokasi tercatat':'Lokasi tidak tersedia'}</span></div><div><b>${r.score}/100</b><br><span class="pill">${r.grade}</span></div></div>`).join(''):'<p class="hint">Tidak ada hasil yang cocok.</p>'}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+$('coachFilter').addEventListener('input',renderHistory);
+$('exportBtn').addEventListener('click',()=>{if(!records.length){alert('Belum ada data untuk diunduh.');return}const cols=['name','coach','date','style','distance','time','tech','performance','score','grade','notes','latitude','longitude'];const rows=[cols.join(','),...records.map(r=>cols.map(k=>{let v=k==='latitude'?r.location?.latitude:k==='longitude'?r.location?.longitude:r[k];return '"'+String(v??'').replace(/"/g,'""')+'"'}).join(','))];const blob=new Blob(['\ufeff'+rows.join('\n')],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='laporan-aquatrack.csv';a.click();URL.revokeObjectURL(a.href)});
+})();
+</script>
+</body></html>
